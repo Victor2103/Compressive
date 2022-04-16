@@ -33,6 +33,8 @@ for i in range(0,len(porteuse)):
 #Pb dimension
 alpha=np.zeros((500,1))
 
-alpha=np.dot(np.linalg.inv(C),X)
+alpha=np.dot(np.transpose(C),X)
+
 
 print(np.linalg.norm(X-np.dot(C,alpha)))
+
