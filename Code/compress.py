@@ -1,3 +1,4 @@
+import math,cmath
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -37,4 +38,13 @@ alpha=np.dot(np.transpose(C),X)
 
 
 print(np.linalg.norm(X-np.dot(C,alpha)))
+
+
+i_complex=complex(0,1)
+F=np.zeros((N,N))
+for i in range(N):
+	for j in range(N):
+		F[i,j]=math.exp(-2*i*j*math.pi*i_complex/N)
+
+
 
