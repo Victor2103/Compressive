@@ -1,4 +1,4 @@
-import math ;
+import math
 import numpy as np;
 
 
@@ -99,6 +99,30 @@ def creationDCT(taille):
 			else :
 				C[k,p]=(np.sqrt(2/taille))*np.cos(np.pi*(2*k+1)*p/(2*taille))
 	return(C)
+
+def IRLS(D,X,eps,Itermax,p):
+    inverse=np.linalg.inv(np.dot(D,np.transpose(D)))
+    alpha=np.dot(np.transpose(D),inverse)
+    alpha=np.dot(alpha,X)
+    wi=[]
+    Omega=np.zeros((np.shape[X][1],np.shape[X][1]))
+    k=0
+    while (abs(np.linalg.norm(alpha)-np.linalg.norm(alpha2))>math.sqrt(eps)/100)and(k<Itermax):
+        for i in range(np.shape[X][1]):
+            wi[i]=math.pow(math.pow(abs(alpha[i]),2)+eps,p/2-1)
+            Omega[i,i]=wi[i]
+        Q=np.dot(Omega,np.transpose(Omega))
+        qDt=np.dot(Q,np.transpose(D))
+        inv=np.linalg.inv(np.dot(D,qDt))
+        tmp=np.dot(qDt,inv)
+        alpha2=np.dot(tmp,X)
+        if (abs(np.linalg.norm(alpha)-np.linalg.norm(alpha2))<math.sqrt(eps)/100)and(eps>math.pow(1/10,8)):
+            eps=eps/10
+        k=k+1
+        alpha=alpha2
+    return(alpha2)
+    
+    
 
     
 
