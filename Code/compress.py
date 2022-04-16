@@ -42,4 +42,22 @@ print("Précision avec la DCT et le dictionnaire obtenu avec OMP : "+str(np.lina
 print("Precision avec la DFT et le dictionnaire obtenu avec OMP : "+str(np.linalg.norm(X1-np.dot(F,alphaOMPF)))
 +" et Nombre d'itérations : "+str(iterationOMPF))
 
+X2=code.creationSignal(100)
 
+print("\n")
+print("Pour un signal de taille 100: ")
+
+C=code.creationDCT(100)
+alphaC=np.dot(np.transpose(C),X2)
+print("Précision avec la DCT et le dictionnaire direct :"+str(np.linalg.norm(X2-np.dot(C,alphaC))))
+F=code.creationDFT(100)
+alphaF=np.dot(np.transpose(F),X2)
+print("Précision avec la DFT et le dictionnaire direct : "+str(np.linalg.norm(X2-np.dot(F,alphaF))))
+
+[alphaOMPC,RésiduOMPC,iterationOMPC]=code.OMP(C,X2,0.01,100)
+print()
+print("Précision avec la DCT et le dictionnaire obtenu avec OMP : "+str(np.linalg.norm(X2-np.dot(C,alphaOMPC)))
++" et Nombre d'itérations : "+str(iterationOMPC))
+[alphaOMPF,residuOMPF,iterationOMPF]=code.OMP(F,X2,0.01,100)
+print("Precision avec la DFT et le dictionnaire obtenu avec OMP : "+str(np.linalg.norm(X2-np.dot(F,alphaOMPF)))
++" et Nombre d'itérations : "+str(iterationOMPF))

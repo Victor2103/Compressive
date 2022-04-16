@@ -77,7 +77,7 @@ def creationSignal(taille):
 	for i in range(taille):
 		porteuse[i]=np.cos(2*np.pi*fp*tporteuse[i])
 	
-	X=np.zeros((500,1))
+	X=np.zeros((taille,1))
 	for i in range(0,len(porteuse)):
 		X[i,0]=sinus[i]*porteuse[i]
 	return(X)
