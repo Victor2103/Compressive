@@ -1,12 +1,15 @@
+from cProfile import label
 import math,cmath
 import matplotlib.pyplot as plt
 import numpy as np
+
+import code
 
 N=500
 C=np.zeros((N,N))
 for k in range(N):
 	for p in range(N):
-		if (p==0):
+		if (k==0):
 			C[k,p]=1/np.sqrt(N)
 		else :
 			C[k,p]=(np.sqrt(2/N))*np.cos(np.pi*(2*k+1)*p/(2*N))
@@ -34,17 +37,33 @@ for i in range(0,len(porteuse)):
 #Pb dimension
 alpha=np.zeros((500,1))
 
-alpha=np.dot(np.transpose(C),X)
+alphaC=np.dot(np.transpose(C),X)
 
 
-print(np.linalg.norm(X-np.dot(C,alpha)))
+print(np.linalg.norm(X-np.dot(C,alphaC)))
 
 
-i_complex=complex(0,1)
-F=np.zeros((N,N))
+F=np.zeros((N,N),dtype='complex')
 for i in range(N):
 	for j in range(N):
-		F[i,j]=math.exp(-2*i*j*math.pi*i_complex/N)
+		tmp=-2*math.pi*i*j/N
+		F[i,j]=1/math.sqrt(N)*complex(math.cos(tmp),math.sin(tmp))
 
 
 
+alphaF=np.dot(np.transpose(F),X)
+
+print(np.linalg.norm(X-np.dot(F,alphaF)))
+
+"""
+plt.plot(t,X,label="Signal d'origine")
+plt.plot(t,np.dot(C,alphaC),label="Représentation avec la base de cosinus discret")
+plt.plot(t,np.dot(F,alphaF),label="Signal avec la base de Fourier")
+plt.legend(loc=2, prop={'size':5})
+plt.show()
+plt.close()
+"""
+
+[alphaOMPC,RésiduOMPC,iteration]=code.OMP(C,X,0.01,100)
+
+print("Précision entre les 2 représentations :"+str(np.linalg.norm(alphaC-alphaOMPC)))
