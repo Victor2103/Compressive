@@ -21,7 +21,7 @@ def OMP(D,X,eps,IterMax):
         alpha=np.dot(np.linalg.pinv(A),X)
         R=X-np.dot(A,alpha)
         k=k+1
-    parcimonieuse=np.zeros((np.shape(D)[1],1))
+    parcimonieuse=np.zeros((np.shape(D)[1],1),dtype='complex')
     j=0
     for i in indices:
         parcimonieuse[i,0]=alpha[j]
@@ -62,7 +62,43 @@ def k_SVD(X,D,eps,N,k):
     return(D,delta,n)
 
 
+def creationSignal(taille):
+	fe=400
+	t=[i/fe for i in range(taille)]
 
+	f0=50
+	sinus=np.zeros(taille)
+	for i in range(taille):
+		sinus[i]=np.sin(2*np.pi*f0*t[i])
+
+	fp=100
+	tporteuse=[i/fe for i in range(taille)]
+	porteuse=np.zeros(taille)
+	for i in range(taille):
+		porteuse[i]=np.cos(2*np.pi*fp*tporteuse[i])
+	
+	X=np.zeros((500,1))
+	for i in range(0,len(porteuse)):
+		X[i,0]=sinus[i]*porteuse[i]
+	return(X)
+
+def creationDFT(taille):
+	F=np.zeros((taille,taille),dtype='complex')
+	for i in range(taille):
+		for j in range(taille):
+			tmp=-2*math.pi*i*j/taille
+			F[i,j]=1/math.sqrt(taille)*complex(math.cos(tmp),math.sin(tmp))
+	return(F)
+
+def creationDCT(taille):
+	C=np.zeros((taille,taille))
+	for k in range(taille):
+		for p in range(taille):
+			if (k==0):
+				C[k,p]=1/np.sqrt(taille)
+			else :
+				C[k,p]=(np.sqrt(2/taille))*np.cos(np.pi*(2*k+1)*p/(2*taille))
+	return(C)
 
     
 
