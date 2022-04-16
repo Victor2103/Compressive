@@ -62,4 +62,9 @@ print("Précision avec la DCT et le dictionnaire obtenu avec OMP : "+str(np.lina
 print("Precision avec la DFT et le dictionnaire obtenu avec OMP : "+str(np.linalg.norm(X2-np.dot(F,alphaOMPF)))
 +" et Nombre d'itérations : "+str(iterationOMPF))
 
-test=code.IRLS(C,X2,0.1,100,2)
+print(np.shape(X2))
+[test,nbiter]=code.IRLS(C,X2,0.1,100,2)
+
+print(np.linalg.norm(X2-np.dot(C,test)))
+print(nbiter)
+print(test)

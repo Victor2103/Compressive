@@ -104,11 +104,23 @@ def IRLS(D,X,eps,Itermax,p):
     inverse=np.linalg.inv(np.dot(D,np.transpose(D)))
     alpha=np.dot(np.transpose(D),inverse)
     alpha=np.dot(alpha,X)
-    wi=[]
-    Omega=np.zeros((np.shape[X][1],np.shape[X][1]))
+    print(np.shape(alpha))
+    Omega=np.zeros((np.shape(X)[0],np.shape(X)[0]))
     k=0
+    wi=[]
+    for i in range(np.shape(X)[0]):
+            wi.append(math.pow(math.pow(abs(alpha[i]),2)+eps,p/2-1))
+            Omega[i,i]=wi[i]
+    Q=np.dot(Omega,np.transpose(Omega))
+    qDt=np.dot(Q,np.transpose(D))
+    inv=np.linalg.inv(np.dot(D,qDt))
+    tmp=np.dot(qDt,inv)
+    alpha2=np.dot(tmp,X)
+    k=k+1
     while (abs(np.linalg.norm(alpha)-np.linalg.norm(alpha2))>math.sqrt(eps)/100)and(k<Itermax):
-        for i in range(np.shape[X][1]):
+        alpha=alpha2
+        wi=[]
+        for i in range(np.shape(X)[0]):
             wi[i]=math.pow(math.pow(abs(alpha[i]),2)+eps,p/2-1)
             Omega[i,i]=wi[i]
         Q=np.dot(Omega,np.transpose(Omega))
@@ -119,8 +131,7 @@ def IRLS(D,X,eps,Itermax,p):
         if (abs(np.linalg.norm(alpha)-np.linalg.norm(alpha2))<math.sqrt(eps)/100)and(eps>math.pow(1/10,8)):
             eps=eps/10
         k=k+1
-        alpha=alpha2
-    return(alpha2)
+    return(alpha2,k)
     
     
 
