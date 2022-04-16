@@ -10,8 +10,6 @@ for k in range(N):
 		else :
 			C[k,p]=(np.sqrt(2/N))*np.cos(np.pi*(2*k+1)*p/(2*N))
 		
-M=np.dot(np.transpose(C),C)
-print(np.shape(M))
 
 
 #Echantillonage
@@ -34,8 +32,7 @@ for i in range(0,len(porteuse)):
 	X[i,0]=sinus[i]*porteuse[i]
 #Pb dimension
 alpha=np.zeros((500,1))
-for i in range(0,np.shape(C)[0]):
-	alpha[i,0]=np.dot(np.transpose(C[:,i]),X)
 
-print(X-np.dot(C,alpha))
+alpha=np.dot(np.linalg.inv(C),X)
 
+print(np.linalg.norm(X-np.dot(C,alpha)))
