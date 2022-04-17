@@ -19,7 +19,7 @@ print("Précision avec la DCT et le dictionnaire direct :"+str(np.linalg.norm(X1
 
 F=code.creationDFT(500)
 
-alphaF=np.dot(np.transpose(F),X1)
+alphaF=np.dot(np.transpose(F.conjugate()),X1)
 
 print("Précision avec la DFT et le dictionnaire direct : "+str(np.linalg.norm(X1-np.dot(F,alphaF))))
 
@@ -67,4 +67,3 @@ print(np.shape(X2))
 
 print(np.linalg.norm(X2-np.dot(C,test)))
 print(nbiter)
-print(test)

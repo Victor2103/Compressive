@@ -12,7 +12,7 @@ def OMP(D,X,eps,IterMax):
         tmp3=np.array([]); 
         for j in range(0,np.shape(D)[1]):
             dj=D[:,j]
-            tmp=abs(np.dot(np.transpose(dj),R)) 
+            tmp=abs(np.dot(np.transpose(dj.conjugate()),R)) 
             tmp2=np.linalg.norm(dj); 
             tmp3=np.append(tmp3,tmp/tmp2) 
         m=np.argmax(tmp3)
@@ -40,9 +40,15 @@ def recherche_non_neg(delta,i):
 def k_SVD(X,D,eps,N,k):
     [delta,Rf,kf]=OMP(D,X,eps,N)
     n=0
+    chapeau=np.array(delta,dtype='complex')
+    for i in range(np.shape(D)[0]-1):
+        chapeau=np.concatenate((chapeau,delta),axis=1)
+    print(np.shape(chapeau))
+    print(np.shape(D))
     while (np.linalg.norm(X-np.dot(D,delta))>eps) and (n<N):
         for i in range(1,k):
-            Ei=X-np.dot(D,delta)+np.dot(D[:,i],delta[i,:])
+            Ei=X-np.dot(D,delta)+np.dot(D[:,i],chapeau[i,:])
+            print("une fois")
             wi=recherche_non_neg(delta,i)
             C=np.identity(X.shape[1])
             omega_i=C[:,wi]
