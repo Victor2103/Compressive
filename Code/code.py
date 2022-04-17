@@ -31,6 +31,7 @@ def OMP(D,X,eps,IterMax):
 
 
 def recherche_non_neg(delta,i):
+    wi=[]
     for j in range(0,delta.shape[1]):
         if (delta[i,j]!=0):
             wi=np.append(wi,j)
@@ -43,14 +44,11 @@ def k_SVD(X,D,eps,N,k):
     chapeau=np.array(delta,dtype='complex')
     for i in range(np.shape(D)[0]-1):
         chapeau=np.concatenate((chapeau,delta),axis=1)
-    print(np.shape(chapeau))
-    print(np.shape(D))
     while (np.linalg.norm(X-np.dot(D,delta))>eps) and (n<N):
         for i in range(1,k):
             Ei=X-np.dot(D,delta)+np.dot(D[:,i],chapeau[i,:])
-            print("une fois")
             wi=recherche_non_neg(delta,i)
-            C=np.identity(X.shape[1])
+            C=np.identity(X.shape[0])
             omega_i=C[:,wi]
             if (omega_i==0):
                 i_eme_colonne=X[:,i]
@@ -62,9 +60,12 @@ def k_SVD(X,D,eps,N,k):
                 D[:,i]=U[:,1]
         [delta,Rf,kf]=OMP(D,X,eps,N)
         n=n+1
-    print("dico final : ",D)
-    print("Représentation parcimonieuse : ",delta)
-    print("Nombre itérations : ",n)
+        chapeau=np.array(delta,dtype='complex')
+        for i in range(np.shape(D)[0]-1):
+            chapeau=np.concatenate((chapeau,delta),axis=1)
+    #print("dico final : ",D)
+    #print("Représentation parcimonieuse : ",delta)
+    #print("Nombre itérations : ",n)
     return(D,delta,n)
 
 
