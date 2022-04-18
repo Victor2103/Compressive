@@ -41,11 +41,40 @@ for i in range(98):
 		k+=1
 
 donnees_appr=test2
-dicoinit=donnees_appr[:,0:98]
+dicoinit=donnees_appr[:,0:100]
 
-norms=np.linalg.norm(dicoinit,axis=1)
+norms=np.linalg.norm(dicoinit,axis=0)
 dicoinit=dicoinit/norms
+
 
 [Dico,chapeauf,nbIter]=code.k_SVD(donnees_appr,dicoinit,0.01,100,90)
 
 print(nbIter)
+
+
+with open('DonneesCS222.csv', 'r') as f:
+    # Créer un objet csv à partir du fichier
+    obj = csv.reader(f)
+
+
+# Ouvrir le fichier csv
+with open('DonneesCS222.csv', 'r') as f:
+	# Créer un objet csv à partir du fichier
+	obj = csv.reader(f)
+	i=0
+	test=np.array([])
+	for ligne in obj:
+		if (i!=1):
+			i+=1
+		else:
+			test=np.append(test,ligne)
+
+k=0
+donneesTest=np.zeros((98,3))
+for i in range(98):
+	for j in range(3):
+		donneesTest[i,j]=test[k]
+		k+=1
+
+[parcimonie1,residu1,k1]=code.OMP(Dico,donneesTest[:,0],0.01,100)
+print(np.linalg.norm(donnees_appr[:,101]-np.dot(Dico,chapeauf[:,101])))

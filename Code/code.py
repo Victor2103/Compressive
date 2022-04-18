@@ -40,29 +40,34 @@ def recherche_non_neg(delta,i):
 
 def k_SVD(X,D,eps,N,k):
     [delta,Rf,kf]=OMP(D,X[:,0],eps,N)
-    n=0
+    n1=0
     chapeau=np.array(delta,dtype='complex')
     for i in range(1,np.shape(X)[1]):
         [delta,Rf,kf]=OMP(D,X[:,i],eps,N)
         chapeau=np.concatenate((chapeau,delta),axis=1)
-    print(np.shape(chapeau))
-    print(np.shape(D))
-    while (np.linalg.norm(X-np.dot(D,chapeau))>eps) and (n<N):
-        for i in range(1,k):
-            Ei=X-np.dot(D,chapeau)+np.dot(D[:,i],chapeau[i,:])
-            wi=recherche_non_neg(chapeau,i)
-            C=np.identity(X.shape[0])
-            omega_i=C[:,wi]
-            if (omega_i==0):
-                i_eme_colonne=X[:,i]
-                norms=np.linalg.norm(i_eme_colonne,axis=2)
-                D[:,i]=i_eme_colonne/norms
-            else:
-                Eir=np.dot(Ei,omega_i)
-                [U,sigma,V]=np.linalg.svd(Eir)
-                D[:,i]=U[:,1]
+    #chapeau=np.concatenate((chapeau,np.zeros((1,108))),axis=0)
+    print(np.shape(X))
+    print(np.shape(np.dot(D,chapeau)))
+    print(np.linalg.norm(X-np.dot(D,chapeau)))
+    for i in range(1,k):
+        contrib=0
+        for j in range(np.shape(D)[1]):
+            contrib=contrib+D[i,j]*chapeau[j,i]
+        Ei=X-np.dot(D,chapeau)+contrib
+        print("une fois")
+        wi=recherche_non_neg(chapeau,i)
+        C=np.identity(X.shape[0])
+        omega_i=C[:,wi]
+        if (omega_i==0):
+            i_eme_colonne=X[:,i]
+            norms=np.linalg.norm(i_eme_colonne,axis=2)
+            D[:,i]=i_eme_colonne/norms
+        else:
+            Eir=np.dot(Ei,omega_i)
+            [U,sigma,V]=np.linalg.svd(Eir)
+            D[:,i]=U[:,1]
         [delta,Rf,kf]=OMP(D,X[:,0],eps,N)
-        n=n+1
+        n1=n1+1
         chapeau=np.array(delta,dtype='complex')
         for i in range(1,np.shape(X)[0]-1):
             [delta,Rf,kf]=OMP(D,X[:,i],eps,N)
@@ -70,7 +75,7 @@ def k_SVD(X,D,eps,N,k):
     #print("dico final : ",D)
     #print("Représentation parcimonieuse : ",delta)
     #print("Nombre itérations : ",n)
-    return(D,chapeau,n)
+    return(D,chapeau,n1)
 
 
 def creationSignal(taille):
