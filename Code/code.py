@@ -12,7 +12,7 @@ def OMP(D,X,eps,IterMax):
         tmp3=np.array([]); 
         for j in range(0,np.shape(D)[1]):
             dj=D[:,j]
-            tmp=abs(np.dot(np.transpose(dj.conjugate()),R)) 
+            tmp=abs(np.dot(np.transpose(dj.conjugate()),R))
             tmp2=np.linalg.norm(dj); 
             tmp3=np.append(tmp3,tmp/tmp2) 
         m=np.argmax(tmp3)
@@ -39,15 +39,18 @@ def recherche_non_neg(delta,i):
 
 
 def k_SVD(X,D,eps,N,k):
-    [delta,Rf,kf]=OMP(D,X,eps,N)
+    [delta,Rf,kf]=OMP(D,X[:,0],eps,N)
     n=0
     chapeau=np.array(delta,dtype='complex')
-    for i in range(np.shape(D)[0]-1):
+    for i in range(1,np.shape(X)[0]):
+        [delta,Rf,kf]=OMP(D,X[:,i],eps,N)
         chapeau=np.concatenate((chapeau,delta),axis=1)
-    while (np.linalg.norm(X-np.dot(D,delta))>eps) and (n<N):
+    print(np.shape(chapeau))
+    print(np.shape(D))
+    while (np.linalg.norm(X-np.dot(D,chapeau))>eps) and (n<N):
         for i in range(1,k):
-            Ei=X-np.dot(D,delta)+np.dot(D[:,i],chapeau[i,:])
-            wi=recherche_non_neg(delta,i)
+            Ei=X-np.dot(D,chapeau)+np.dot(D[:,i],chapeau[i,:])
+            wi=recherche_non_neg(chapeau,i)
             C=np.identity(X.shape[0])
             omega_i=C[:,wi]
             if (omega_i==0):
@@ -58,15 +61,16 @@ def k_SVD(X,D,eps,N,k):
                 Eir=np.dot(Ei,omega_i)
                 [U,sigma,V]=np.linalg.svd(Eir)
                 D[:,i]=U[:,1]
-        [delta,Rf,kf]=OMP(D,X,eps,N)
+        [delta,Rf,kf]=OMP(D,X[:,0],eps,N)
         n=n+1
         chapeau=np.array(delta,dtype='complex')
-        for i in range(np.shape(D)[0]-1):
+        for i in range(1,np.shape(X)[0]-1):
+            [delta,Rf,kf]=OMP(D,X[:,i],eps,N)
             chapeau=np.concatenate((chapeau,delta),axis=1)
     #print("dico final : ",D)
     #print("Représentation parcimonieuse : ",delta)
     #print("Nombre itérations : ",n)
-    return(D,delta,n)
+    return(D,chapeau,n)
 
 
 def creationSignal(taille):

@@ -23,14 +23,14 @@ alphaF=np.dot(np.transpose(F.conjugate()),X1)
 
 print("Précision avec la DFT et le dictionnaire direct : "+str(np.linalg.norm(X1-np.dot(F,alphaF))))
 
-"""
-plt.plot(t,X,label="Signal d'origine")
-plt.plot(t,np.dot(C,alphaC),label="Représentation avec la base de cosinus discret")
-plt.plot(t,np.dot(F,alphaF),label="Signal avec la base de Fourier")
-plt.legend(loc=2, prop={'size':5})
+t=[i/400 for i in range(150)]
+plt.plot(t,X1[0:150,0],label="Signal d'origine")
+plt.plot(t,np.dot(C,alphaC)[0:150,0],label="Représentation avec la base de cosinus discret")
+plt.plot(t,np.dot(F,alphaF)[0:150,0],label="Signal avec la base de Fourier")
+plt.legend(loc=2, prop={'size':10})
 plt.show()
 plt.close()
-"""
+
 [alphaOMPC,RésiduOMPC,iterationOMPC]=code.OMP(C,X1,0.01,100)
 
 print()
