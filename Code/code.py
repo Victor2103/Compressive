@@ -42,7 +42,7 @@ def k_SVD(X,D,eps,N,k):
     [delta,Rf,kf]=OMP(D,X[:,0],eps,N)
     n=0
     chapeau=np.array(delta,dtype='complex')
-    for i in range(1,np.shape(X)[0]):
+    for i in range(1,np.shape(X)[1]):
         [delta,Rf,kf]=OMP(D,X[:,i],eps,N)
         chapeau=np.concatenate((chapeau,delta),axis=1)
     print(np.shape(chapeau))

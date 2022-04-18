@@ -23,7 +23,6 @@ with open('DonneesCS22.csv', 'r') as f:
 with open('DonneesCS22.csv', 'r') as f:
 	# Créer un objet csv à partir du fichier
 	obj = csv.reader(f)
-	print(obj)
 	i=0
 	test=np.array([])
 	for ligne in obj:
@@ -33,7 +32,7 @@ with open('DonneesCS22.csv', 'r') as f:
 			test=np.append(test,ligne)
 
 
-print(10584/108)
+
 test2=np.zeros((98,108))
 k=0
 for i in range(98):
@@ -42,5 +41,11 @@ for i in range(98):
 		k+=1
 
 donnees_appr=test2
+dicoinit=donnees_appr[:,0:98]
 
-[Dico,chapeauf,nbIter]=code.k_SVD(test2,dicoinit,0.01,100,100)
+norms=np.linalg.norm(dicoinit,axis=1)
+dicoinit=dicoinit/norms
+
+[Dico,chapeauf,nbIter]=code.k_SVD(donnees_appr,dicoinit,0.01,100,90)
+
+print(nbIter)
