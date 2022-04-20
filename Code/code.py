@@ -31,9 +31,9 @@ def OMP(D,X,eps,IterMax):
 
 
 def recherche_non_neg(delta,i):
-    wi=[]
-    for j in range(0,delta.shape[1]):
-        if (delta[i,j]!=0):
+    wi=np.array([],dtype='int')
+    for j in range(0,delta.shape[0]):
+        if (delta[j,i]!=0):
             wi=np.append(wi,j)
     return(wi)
 
@@ -53,19 +53,20 @@ def k_SVD(X,D,eps,N,k):
         contrib=0
         for j in range(np.shape(D)[1]):
             contrib=contrib+D[i,j]*chapeau[j,i]
-        Ei=X-np.dot(D,chapeau)+contrib
+        Ei=X-np.dot(D,chapeau)-contrib
         print("une fois")
         wi=recherche_non_neg(chapeau,i)
         C=np.identity(X.shape[0])
+        print(type(wi[0]))
         omega_i=C[:,wi]
-        if (omega_i==0):
+        if ((omega_i==0).all()):
             i_eme_colonne=X[:,i]
             norms=np.linalg.norm(i_eme_colonne,axis=2)
             D[:,i]=i_eme_colonne/norms
         else:
-            Eir=np.dot(Ei,omega_i)
+            Eir=np.dot(np.transpose(omega_i),Ei)
             [U,sigma,V]=np.linalg.svd(Eir)
-            D[:,i]=U[:,1]
+            D[:,i]=U[:,0]
         [delta,Rf,kf]=OMP(D,X[:,0],eps,N)
         n1=n1+1
         chapeau=np.array(delta,dtype='complex')
