@@ -56,14 +56,14 @@ def k_SVD(X,D,eps,N,k):
         Ei=X-np.dot(D,chapeau)+contrib
         print(i)
         wi=recherche_non_neg(chapeau,i)
-        C=np.identity(X.shape[0])
-        omega_i=C[:,wi]
+        C=np.identity(X.shape[1])
+        omega_i=C[wi,:]
         if ((omega_i==0).all()):
             i_eme_colonne=X[:,i]
             norms=np.linalg.norm(i_eme_colonne,axis=2)
             D[:,i]=i_eme_colonne/norms
         else:
-            Eir=np.dot(np.transpose(omega_i),Ei)
+            Eir=np.dot(Ei,np.transpose(omega_i))
             [U,sigma,V]=np.linalg.svd(Eir)
             D[:,i]=U[:,0]
         [delta,Rf,kf]=OMP(D,X[:,0],eps,N)
