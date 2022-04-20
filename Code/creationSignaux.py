@@ -1,6 +1,7 @@
 import numpy as np 
 import code
 import csv
+from ksvd import ApproximateKSVD
 
 """
 D1=np.array([[1,1,2,5,0,0,3,-2,1,2,2,2,5,1,3,1,-1,2,9,5,5,1,1,5],
@@ -47,9 +48,9 @@ norms=np.linalg.norm(dicoinit,axis=0)
 dicoinit=dicoinit/norms
 
 
-[Dico,chapeauf,nbIter]=code.k_SVD(donnees_appr,dicoinit,0.01,50,100)
+#[Dico,chapeauf,nbIter]=code.k_SVD(donnees_appr,dicoinit,0.01,50,100)
 
-print(nbIter)
+#print(nbIter)
 
 
 with open('DonneesCS222.csv', 'r') as f:
@@ -76,5 +77,20 @@ for i in range(98):
 		donneesTest[i,j]=test[k]
 		k+=1
 
-[parcimonie1,residu1,k1]=code.OMP(Dico,donneesTest[:,0],0.01,100)
-print(np.linalg.norm(donneesTest[:,0]-np.dot(Dico,parcimonie1)))
+
+
+
+
+
+# X ~ gamma.dot(dictionary)
+#X = np.random.randn(1000, 20)
+aksvd = ApproximateKSVD(n_components=100)
+dictionary = aksvd.fit(donnees_appr).components_
+gamma = aksvd.transform(donnees_appr)
+
+print(np.shape(dictionary))
+
+
+
+[parcimonie1,residu1,k1]=code.OMP(dictionary,donneesTest[:,0],0.01,100)
+print(np.linalg.norm(donneesTest[:,0]-np.dot(dictionary,parcimonie1)))
