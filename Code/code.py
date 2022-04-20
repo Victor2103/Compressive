@@ -51,13 +51,12 @@ def k_SVD(X,D,eps,N,k):
     print(np.linalg.norm(X-np.dot(D,chapeau)))
     for i in range(1,k):
         contrib=0
-        for j in range(np.shape(D)[1]):
-            contrib=contrib+D[i,j]*chapeau[j,i]
-        Ei=X-np.dot(D,chapeau)-contrib
-        print("une fois")
+        for j in range(np.shape(D)[0]):
+            contrib=contrib+D[j,i]*chapeau[i,j]
+        Ei=X-np.dot(D,chapeau)+contrib
+        print(i)
         wi=recherche_non_neg(chapeau,i)
         C=np.identity(X.shape[0])
-        print(type(wi[0]))
         omega_i=C[:,wi]
         if ((omega_i==0).all()):
             i_eme_colonne=X[:,i]
@@ -70,8 +69,8 @@ def k_SVD(X,D,eps,N,k):
         [delta,Rf,kf]=OMP(D,X[:,0],eps,N)
         n1=n1+1
         chapeau=np.array(delta,dtype='complex')
-        for i in range(1,np.shape(X)[0]-1):
-            [delta,Rf,kf]=OMP(D,X[:,i],eps,N)
+        for j in range(1,np.shape(X)[1]):
+            [delta,Rf,kf]=OMP(D,X[:,j],eps,N)
             chapeau=np.concatenate((chapeau,delta),axis=1)
     #print("dico final : ",D)
     #print("Représentation parcimonieuse : ",delta)

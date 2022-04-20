@@ -47,7 +47,7 @@ norms=np.linalg.norm(dicoinit,axis=0)
 dicoinit=dicoinit/norms
 
 
-[Dico,chapeauf,nbIter]=code.k_SVD(donnees_appr,dicoinit,0.01,100,90)
+[Dico,chapeauf,nbIter]=code.k_SVD(donnees_appr,dicoinit,0.01,50,100)
 
 print(nbIter)
 
@@ -77,4 +77,4 @@ for i in range(98):
 		k+=1
 
 [parcimonie1,residu1,k1]=code.OMP(Dico,donneesTest[:,0],0.01,100)
-print(np.linalg.norm(donnees_appr[:,101]-np.dot(Dico,chapeauf[:,101])))
+print(np.linalg.norm(donneesTest[:,0]-np.dot(Dico,parcimonie1)))
