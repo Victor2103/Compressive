@@ -90,7 +90,8 @@ gamma = aksvd.transform(donnees_appr)
 
 print(np.shape(dictionary))
 
-
+chapeauf=code.kSVD(donnees_appr,100,0.01,50)
+print(chapeauf)
 
 [parcimonie1,residu1,k1]=code.OMP(dictionary,donneesTest[:,0],0.01,100)
 print(np.linalg.norm(donneesTest[:,0]-np.dot(dictionary,parcimonie1)))
