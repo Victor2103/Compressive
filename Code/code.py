@@ -47,10 +47,11 @@ def kSVD(X,k,eps,N):
         D[:,i]=D[:,i]/norms[i]
     [delta,residu,nbIter]=OMP(D,X[:,0],eps,N)
     chapeau=np.array(delta,dtype='complex')
+    print(np.shape(chapeau))
     for i in range(1,np.shape(X)[1]):
         [delta,residu,nbIter]=OMP(D,X[:,i],eps,N)
-        chapeau=np.concatenate((chapeau,delta))
-    return(chapeau)
+        chapeau=np.concatenate((chapeau,delta),axis=1)
+    return(np.shape(chapeau))
     
 
 
