@@ -49,7 +49,7 @@ def kSVD(X,k,eps,N):
     chapeau=np.array(delta,dtype='complex')
     for i in range(1,np.shape(X)[1]):
         [delta,residu,nbIter]=OMP(D,X[:,i],eps,N)
-        chapeau=np.concatenate(chapeau,delta)
+        chapeau=np.concatenate((chapeau,delta))
     return(chapeau)
     
 
