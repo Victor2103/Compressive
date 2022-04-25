@@ -1,4 +1,6 @@
+from calendar import c
 import math
+from turtle import pos
 import numpy as np;
 
 
@@ -40,18 +42,54 @@ def recherche_non_neg(delta,i):
 
 def kSVD(X,k,eps,N):
     D=X[:,0:k]
-    print(np.shape(D))
     norms=np.linalg.norm(D,axis=0)
-    print(np.shape(norms))
     for i in range(k):
         D[:,i]=D[:,i]/norms[i]
     [delta,residu,nbIter]=OMP(D,X[:,0],eps,N)
     chapeau=np.array(delta,dtype='complex')
-    print(np.shape(chapeau))
     for i in range(1,np.shape(X)[1]):
         [delta,residu,nbIter]=OMP(D,X[:,i],eps,N)
         chapeau=np.concatenate((chapeau,delta),axis=1)
-    return(np.shape(chapeau))
+    pos=[]
+    tmp=0
+    while (tmp<10):
+        for i in range(k):
+            for j in range(np.shape(chapeau)[1]):
+                 if (chapeau[i,j]!=0):
+                    pos.append(j)
+            if (len(pos)>0):
+                di=np.zeros((np.shape(D)[0],1),dtype='complex')
+                alphai=np.zeros((1,np.shape(chapeau)[1]),dtype='complex')
+                for j in range(np.shape(D)[0]):
+                    di[j,0]=D[j,i]
+                for j in range(np.shape(chapeau)[1]):
+                    alphai[0,j]=chapeau[i,j]
+                Ei=X-np.dot(D,chapeau)+np.dot(di,alphai)
+                omega=np.zeros((np.shape(X)[1],len(pos)))
+                for j in range(len(pos)):
+                    omega[pos[j],j]=1
+                Eir=np.dot(Ei,omega)
+                [U,Delta,V]=np.linalg.svd(Eir)
+                for j in range(np.shape(D)[0]):
+                    D[j,i]=U[j,0]
+                for j in range(len(pos)):
+                    chapeau[i,pos[j]]=Delta[0]*V[j,0]
+        [delta,residu,nbIter]=OMP(D,X[:,0],eps,N)
+        chapeau=np.array(delta,dtype='complex')
+        for i in range(1,np.shape(X)[1]):
+            [delta,residu,nbIter]=OMP(D,X[:,i],eps,N)
+            chapeau=np.concatenate((chapeau,delta),axis=1)
+        tmp+=1
+        print(tmp)
+            
+
+
+    return(D)
+
+
+
+
+
     
 
 
