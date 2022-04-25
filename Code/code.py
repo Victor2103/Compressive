@@ -24,7 +24,7 @@ def OMP(D,X,eps,IterMax):
         alpha=np.dot(np.linalg.pinv(A),X)
         R=X-np.dot(A,alpha)
         k=k+1
-    parcimonieuse=np.zeros((np.shape(D)[1],1),dtype='complex')
+    parcimonieuse=np.zeros((np.shape(D)[1],1))
     j=0
     for i in indices:
         parcimonieuse[i,0]=alpha[j]
@@ -33,12 +33,6 @@ def OMP(D,X,eps,IterMax):
 
 
 
-def recherche_non_neg(delta,i):
-    wi=np.array([],dtype='int')
-    for j in range(0,delta.shape[0]):
-        if (delta[j,i]!=0):
-            wi=np.append(wi,j)
-    return(wi)
 
 
 def kSVD(X,k,eps,N):
@@ -47,20 +41,21 @@ def kSVD(X,k,eps,N):
     for i in range(k):
         D[:,i]=D[:,i]/norms[i]
     [delta,residu,nbIter]=OMP(D,X[:,0],eps,N)
-    chapeau=np.array(delta,dtype='complex')
+    chapeau=np.array(delta)
     for i in range(1,np.shape(X)[1]):
         [delta,residu,nbIter]=OMP(D,X[:,i],eps,N)
         chapeau=np.concatenate((chapeau,delta),axis=1)
     pos=[]
     tmp=0
-    while (tmp<1):
+    D0=D
+    while (tmp<12):
         for i in range(k):
             for j in range(np.shape(chapeau)[1]):
                  if (chapeau[i,j]!=0):
                     pos.append(j)
             if (len(pos)>0):
-                di=np.zeros((np.shape(D)[0],1),dtype='complex')
-                alphai=np.zeros((1,np.shape(chapeau)[1]),dtype='complex')
+                di=np.zeros((np.shape(D)[0],1))
+                alphai=np.zeros((1,np.shape(chapeau)[1]))
                 for j in range(np.shape(D)[0]):
                     di[j,0]=D[j,i]
                 for j in range(np.shape(chapeau)[1]):
@@ -72,19 +67,21 @@ def kSVD(X,k,eps,N):
                 Eir=np.dot(Ei,omega)
                 [U,Delta,V]=svd(Eir)
                 for j in range(np.shape(D)[0]):
-                    D[j,i]=U[j,0]
+                    D0[j,i]=U[j,0]
+                for j in range(len(pos)):
+                    chapeau[i,pos]=Delta[0]*V[j,0]
                 else: 
                     norm=np.linalg.norm(D[:,i])
                     for j in range(np.shape(D)[0]):
-                        D[j,i]=D[j,i]/norm
+                        D0[j,i]=D[j,i]/norm
         [delta,residu,nbIter]=OMP(D,X[:,0],eps,N)
-        chapeau=np.array(delta,dtype='complex')
+        chapeau=np.array(delta)
         for i in range(1,np.shape(X)[1]):
             [delta,residu,nbIter]=OMP(D,X[:,i],eps,N)
             chapeau=np.concatenate((chapeau,delta),axis=1)
         tmp+=1
         print(tmp)
-            
+        D=D0
 
 
     return(D)

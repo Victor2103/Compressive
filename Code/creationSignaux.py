@@ -90,7 +90,7 @@ gamma = aksvd.transform(donnees_appr)
 
 
 
-dicof=code.kSVD(donnees_appr,100,0.1,50)
+dicof=code.kSVD(donnees_appr,100,0.1,20)
 
 
 [parcimonie1,residu1,k1]=code.OMP(dicof,donneesTest[:,0],0.1,100)
