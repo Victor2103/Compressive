@@ -55,7 +55,7 @@ def kSVD(X,k,eps,N):
     while (tmp<10):
         for i in range(k):
             for j in range(np.shape(chapeau)[1]):
-                 if (chapeau[i,j]!=0):
+                if (chapeau[i,j]!=0):
                     pos.append(j)
             if (len(pos)>0):
                 di=np.zeros((np.shape(D)[0],1),dtype='complex')
@@ -72,13 +72,6 @@ def kSVD(X,k,eps,N):
                 [U,Delta,V]=np.linalg.svd(Eir)
                 for j in range(np.shape(D)[0]):
                     D[j,i]=U[j,0]
-                for j in range(len(pos)):
-                    chapeau[i,pos[j]]=Delta[0]*V[j,0]
-        [delta,residu,nbIter]=OMP(D,X[:,0],eps,N)
-        chapeau=np.array(delta,dtype='complex')
-        for i in range(1,np.shape(X)[1]):
-            [delta,residu,nbIter]=OMP(D,X[:,i],eps,N)
-            chapeau=np.concatenate((chapeau,delta),axis=1)
         tmp+=1
         print(tmp)
             
