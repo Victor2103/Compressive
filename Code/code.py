@@ -1,7 +1,8 @@
 from calendar import c
 import math
 from turtle import pos
-import numpy as np;
+import numpy as np
+from scipy.linalg import svd
 
 
 
@@ -52,7 +53,7 @@ def kSVD(X,k,eps,N):
         chapeau=np.concatenate((chapeau,delta),axis=1)
     pos=[]
     tmp=0
-    while (tmp<10):
+    while (tmp<1):
         for i in range(k):
             for j in range(np.shape(chapeau)[1]):
                  if (chapeau[i,j]!=0):
@@ -69,11 +70,13 @@ def kSVD(X,k,eps,N):
                 for j in range(len(pos)):
                     omega[pos[j],j]=1
                 Eir=np.dot(Ei,omega)
-                [U,Delta,V]=np.linalg.svd(Eir)
+                [U,Delta,V]=svd(Eir)
                 for j in range(np.shape(D)[0]):
                     D[j,i]=U[j,0]
-                for j in range(len(pos)):
-                    chapeau[i,pos[j]]=Delta[0]*V[j,0]
+                else: 
+                    norm=np.linalg.norm(D[:,i])
+                    for j in range(np.shape(D)[0]):
+                        D[j,i]=D[j,i]/norm
         [delta,residu,nbIter]=OMP(D,X[:,0],eps,N)
         chapeau=np.array(delta,dtype='complex')
         for i in range(1,np.shape(X)[1]):
